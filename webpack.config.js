@@ -33,6 +33,10 @@ const config = {
         include: APP_DIR,
         loaders: ['style-loader', 'css-loader', 'postcss-loader'],
       },
+      {
+        test: /\.jpg$/,
+        loader: 'file-loader',
+      },
     ],
   },
   postcss: () => [autoprefixer, precss],

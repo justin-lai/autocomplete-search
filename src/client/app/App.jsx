@@ -1,6 +1,9 @@
+/* global autocomplete */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_highlightResult"] }] */
+
 import React from 'react';
 import bindAll from 'lodash.bindall';
-import s from '../styles/App.scss';
+import style from '../styles/App.scss';
 import index from '../config/config.js';
 import SearchBox from './SearchBox.jsx';
 import ProductList from './ProductList.jsx';
@@ -21,13 +24,24 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    autocomplete('#search-input', { hint: false }, [
+      {
+        source: autocomplete.sources.hits(index, { hitsPerPage: 5 }),
+        displayKey: 'name',
+        templates: {
+          suggestion: suggestion => suggestion._highlightResult.name.value,
+        },
+      },
+    ]).on('autocomplete:selected', (event, suggestion, dataset) => {
+      console.log(suggestion, dataset);
+    });
   }
 
   instantSearch(query) {
     const options = {
       page: this.state.page - 1,
+      attributesToSnippet: ['name:5', 'description:15'],
     };
-    console.log('SEARCHING FOR', options.page);
 
     index.search(query, options, (err, content) => {
       console.log(content);
@@ -39,12 +53,14 @@ class App extends React.Component {
     });
   }
 
+  autocompleteSearch() {
+  }
+
   entryClick(product) {
     console.log(product);
   }
 
   pageClick(page) {
-    console.log('CLICKED', page);
     this.setState({ page }, () => {
       this.instantSearch(this.state.query);
     });
@@ -65,11 +81,17 @@ class App extends React.Component {
     }
 
     return (
-      <div className="container">
-        <h1>ALGOLIA SEARCH</h1>
-        <SearchBox instantSearch={this.instantSearch} />
-        { content }
-      </div>
+      <section className="container">
+        <div className="row">
+          <div id="search-fields" className="col-xs-4 col-md-4">
+            <h1 id="search-header">ALGOLIA SEARCH</h1>
+            <SearchBox instantSearch={this.instantSearch} />
+          </div>
+          <div id="search-results" className="col-xs-8 col-md-8">
+            { content }
+          </div>
+        </div>
+      </section>
     );
   }
 }

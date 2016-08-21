@@ -6,15 +6,49 @@
  * ========================================================================== */
  
 h1 {
-  color: $red;
+  color: #222;
   font-weight: 100;
   font-size: 2em; /* ~16px; */
   font-family: $font-family-base;
   line-height: 1.375; /* ~22px */
 }
- 
+
+/*
+ * Layout
+ * ========================================================================== */
+
 .container {
   margin: 0 auto;
-  padding: 0 0 40px;
+  padding: 0;
   max-width: $max-content-width;
 }
+
+#search-fields {
+  border-right: 1px solid $grey-light;
+  height: 100%;
+  background-color: rgba(173, 216, 230, 0.8);
+}
+
+#search-results {
+  height: 100%;
+  background-color: white;
+}
+
+/*
+ * Background
+ * ========================================================================== */
+
+body:after {
+  content : "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url('../assets/background.jpg'); 
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  opacity: .8;
+  z-index: -1;
+}
+

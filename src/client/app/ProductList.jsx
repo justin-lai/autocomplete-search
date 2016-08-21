@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import ProductEntry from './ProductEntry.jsx';
 import Pagination from './Pagination.jsx';
+import style from '../styles/ProductList.scss';
 
 const ProductList = ({ products, entryClick, pageClick }) => (
   <div className="product-list-container">
