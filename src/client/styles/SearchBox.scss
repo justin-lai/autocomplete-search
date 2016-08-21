@@ -24,6 +24,7 @@
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
   cursor: pointer;
   padding: 5px 4px;
+  border-bottom: 1px solid $grey-light;
 }
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
   background: $bootstrap-blue-light;

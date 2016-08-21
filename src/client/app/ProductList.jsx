@@ -5,19 +5,21 @@ import style from '../styles/ProductList.scss';
 
 const ProductList = ({ products, entryClick, pageClick }) => (
   <div className="product-list-container">
-    <div id="results">
-      <strong>{`${products.nbHits} results `}</strong>{`found in ${products.processingTimeMS} ms`}  
-    </div>
-    <Pagination
-      numberOfPages={products.nbPages}
-      activePage={products.page + 1}
-      pageClick={pageClick}
-    />
     <ul id="product-list">
+      <div id="stats" className="small">
+        <h4>{`${products.nbHits} results `}<small>{`found in ${products.processingTimeMS} ms`}</small></h4>  
+      </div>
       {
         products.hits.map((product, i) =>
           <ProductEntry product={product} key={i} entryClick={entryClick} />)
       }
+      <div className="pagination-container">
+        <Pagination
+          numberOfPages={products.nbPages}
+          activePage={products.page + 1}
+          pageClick={pageClick}
+        />
+      </div>
     </ul>
   </div>
 );

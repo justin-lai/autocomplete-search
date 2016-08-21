@@ -6,9 +6,19 @@
  * ========================================================================== */
 
 ul#product-list {
-  height: calc(100% - 94px);
+  height: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
   overflow: auto;
+}
+
+#stats {
+  border-bottom: solid 1px black;
+  margin: 30px 0;
+}
+
+.pagination-container {
+  margin-top: 10px;
+  text-align: center;
 }

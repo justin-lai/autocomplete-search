@@ -8,11 +8,12 @@
 .product-entry-name em,
 .product-entry-description em { 
   background-color: $red-light; 
-  font-style: normal; 
+  font-style: normal;
 }
 
 li.product-entry {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 15px 0;
+  border-bottom: 1px solid $grey-light;
 }
