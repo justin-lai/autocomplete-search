@@ -1,0 +1,17 @@
+@import '../../../node_modules/normalize.css/normalize.css';
+@import './variables.scss';
+ 
+/*
+ * Base styles
+ * ========================================================================== */
+
+em { 
+  background-color: $light-red; 
+  font-style: normal; 
+}
+
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

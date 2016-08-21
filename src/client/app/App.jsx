@@ -9,11 +9,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      query: '',
       results: [],
+      page: 1,
     };
     bindAll(this,
       'instantSearch',
-      'handleClickEntry'
+      'entryClick',
+      'pageClick'
     );
   }
 
@@ -21,24 +24,51 @@ class App extends React.Component {
   }
 
   instantSearch(query) {
-    index.search(query, (err, content) => {
+    const options = {
+      page: this.state.page - 1,
+    };
+    console.log('SEARCHING FOR', options.page);
+
+    index.search(query, options, (err, content) => {
       console.log(content);
       this.setState({
-        results: content.hits,
+        query,
+        results: content,
+        page: 1,
       });
     });
   }
 
-  handleClickEntry(product) {
+  entryClick(product) {
     console.log(product);
   }
 
+  pageClick(page) {
+    console.log('CLICKED', page);
+    this.setState({ page }, () => {
+      this.instantSearch(this.state.query);
+    });
+  }
+
   render() {
+    let content;
+    if (this.state.results.nbHits > 0 && this.state.query !== '') {
+      content = (
+        <ProductList
+          products={this.state.results}
+          entryClick={this.entryClick}
+          pageClick={this.pageClick}
+        />
+      );
+    } else if (this.state.query !== '') {
+      content = <p>No results found</p>;
+    }
+
     return (
       <div className="container">
         <h1>ALGOLIA SEARCH</h1>
         <SearchBox instantSearch={this.instantSearch} />
-        <ProductList products={this.state.results} handleClickEntry={this.handleClickEntry} />
+        { content }
       </div>
     );
   }

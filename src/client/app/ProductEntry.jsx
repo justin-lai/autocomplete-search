@@ -1,13 +1,12 @@
 import React, { PropTypes } from 'react';
+import s from '../styles/ProductEntry.scss';
 
-const ProductEntry = (props) => {
-  const product = props.product;
-
+const ProductEntry = ({ product, entryClick }) => {
   return (
-    <li className="product-entry row" onClick={() => { props.handleClickEntry(props.product); }} >
+    <li className="product-entry row" onClick={() => { entryClick(product); }} >
       <div className="entry-content-container col-xs-12 col-md-8">
-        <p className="product-entry-name"><strong>{ product.name }</strong></p>
-        <p className="product-entry-description small">{ product.description }</p>
+        <p className="product-entry-name"><strong dangerouslySetInnerHTML={{__html: product._highlightResult.name.value }} /></p>
+        <p className="product-entry-description small" dangerouslySetInnerHTML={{ __html: product._highlightResult.description.value }}></p>
       </div>
       <div className="col-xs-12 col-md-4">
         <img alt={product.name} className="product-entry-photo" src={product.image} />
@@ -18,7 +17,7 @@ const ProductEntry = (props) => {
 
 ProductEntry.propTypes = {
   product: PropTypes.object.isRequired,
-  handleClickEntry: PropTypes.func.isRequired,
+  entryClick: PropTypes.func.isRequired,
 };
 
 export default ProductEntry;
