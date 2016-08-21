@@ -3,6 +3,7 @@ import bindAll from 'lodash.bindall';
 import s from '../styles/App.scss';
 import index from '../config/config.js';
 import SearchBox from './SearchBox.jsx';
+import ProductList from './ProductList.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class App extends React.Component {
       results: [],
     };
     bindAll(this,
-      'instantSearch'
+      'instantSearch',
+      'handleClickEntry'
     );
   }
 
@@ -27,11 +29,16 @@ class App extends React.Component {
     });
   }
 
+  handleClickEntry(product) {
+    console.log(product);
+  }
+
   render() {
     return (
       <div className="container">
         <h1>ALGOLIA SEARCH</h1>
         <SearchBox instantSearch={this.instantSearch} />
+        <ProductList products={this.state.results} handleClickEntry={this.handleClickEntry} />
       </div>
     );
   }

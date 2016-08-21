@@ -35,7 +35,6 @@
     "eslint-plugin-import": "^1.13.0",
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.0",
-    "json-loader": "^0.5.4",
     "postcss": "^5.1.2",
     "postcss-loader": "^0.10.1",
     "precss": "^1.4.0",

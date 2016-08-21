@@ -20,7 +20,7 @@ class SearchBox extends React.Component {
     return (
       <form>
         <div className="input-group input-group-sm">
-          <span className="input-group-addon" id="location-addon">Currently in</span>
+          <span className="input-group-addon" id="primary-search">Search</span>
           <input
             className="form-control"
             type="text"
