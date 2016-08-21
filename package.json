@@ -1,0 +1,47 @@
+{
+  "name": "algolia-autocomplete",
+  "version": "1.0.0",
+  "description": "autocomplete search using algolia search API",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack -d --watch",
+    "build": "webpack -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justin-lai/autocomplete-search.git"
+  },
+  "author": "Justin Lai",
+  "license": "ISC",
+  "dependencies": {
+    "algoliasearch": "^3.18.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash.bindall": "^4.4.0",
+    "normalize.css": "^4.2.0",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "webpack": "^1.13.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.4.0",
+    "css-loader": "^0.23.1",
+    "eslint": "^3.3.0",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-import": "^1.13.0",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.1.0",
+    "json-loader": "^0.5.4",
+    "postcss": "^5.1.2",
+    "postcss-loader": "^0.10.1",
+    "precss": "^1.4.0",
+    "react-hot-loader": "^1.3.0",
+    "sass-loader": "^4.0.0",
+    "style-loader": "^0.13.1",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
