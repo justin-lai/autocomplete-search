@@ -3,8 +3,8 @@
 import React, { PropTypes } from 'react';
 import style from '../styles/ProductEntry.scss';
 
-const ProductEntry = ({ product, entryClick }) => (
-  <li className="product-entry row" onClick={() => { entryClick(product); }} >
+const ProductEntry = ({ product }) => (
+  <li className="product-entry row">
     <div className="entry-content-container col-xs-12 col-md-8">
       <p className="product-entry-name">
         <strong dangerouslySetInnerHTML={{ __html: product._highlightResult.name.value }} />
@@ -22,7 +22,6 @@ const ProductEntry = ({ product, entryClick }) => (
 
 ProductEntry.propTypes = {
   product: PropTypes.object.isRequired,
-  entryClick: PropTypes.func.isRequired,
 };
 
 export default ProductEntry;

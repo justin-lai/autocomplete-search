@@ -9,6 +9,7 @@ import SearchBox from './SearchBox.jsx';
 import ProductList from './ProductList.jsx';
 import FilterCategory from './FilterCategory.jsx';
 import FilterBrand from './FilterBrand.jsx';
+import FilterType from './FilterType.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,13 +20,15 @@ class App extends React.Component {
       page: 1,
       categoryFilter: [],
       brandFilter: [],
+      typeFilter: '',
+      facets: [],
     };
     bindAll(this,
       'instantSearch',
-      'entryClick',
       'pageClick',
       'categoryChange',
-      'brandChange'
+      'brandChange',
+      'typeToggle'
     );
   }
 
@@ -43,7 +46,7 @@ class App extends React.Component {
     });
   }
 
-  instantSearch(query) {
+  instantSearch(query, callback) {
     const filters = [];
     if (this.state.categoryFilter.length > 0) {
       filters.push(this.state.categoryFilter
@@ -55,44 +58,80 @@ class App extends React.Component {
                     .map(brand => `brand:\"${brand.name}\"`)
                     .join(' OR '));
     }
+    if (this.state.typeFilter) {
+      filters.push(`type:\"${this.state.typeFilter}\"`);
+    }
     const filterString = filters.length > 0 ? filters.join(' AND ') : '';
-    
+
     const options = {
       page: this.state.page - 1,
       facets: '*',
       filters: filterString,
-      // attributesToSnippet: ['name:5', 'description:15'],
     };
 
-    index.search(query, options, (err, content) => {
-      console.log(content);
-      this.setState({
-        query,
-        results: content,
-        page: 1,
+    if (callback) {
+      index.search(query, options, callback);
+    } else {
+      // default callback if not provided (occurs when typing through searchbox)
+      index.search(query, options, (err, content) => {
+        console.log(content);
+        this.setState({
+          query,
+          results: content,
+          page: 1,
+          facets: content.facets,
+          categoryFilter: [],
+          brandFilter: [],
+          typeFilter: '',
+        });
       });
-    });
-  }
-
-  entryClick(product) {
-    console.log(product);
+    }
   }
 
   pageClick(page) {
     this.setState({ page }, () => {
-      this.instantSearch(this.state.query);
+      this.instantSearch(this.state.query, (err, content) => {
+        this.setState({
+          results: content,
+          page: 1, // reset page for next search
+        });
+      });
     });
   }
 
   categoryChange(checkedBoxes) {
     this.setState({ categoryFilter: checkedBoxes }, () => {
-      this.instantSearch(this.state.query);
+      this.instantSearch(this.state.query, (err, content) => {
+        this.setState({
+          results: content,
+        });
+      });
     });
   }
 
   brandChange(checkedBoxes) {
     this.setState({ brandFilter: checkedBoxes }, () => {
-      this.instantSearch(this.state.query);
+      this.instantSearch(this.state.query, (err, content) => {
+        this.setState({
+          results: content,
+        });
+      });
+    });
+  }
+
+  typeToggle(type) {
+    const typeFilter = this.state.typeFilter ? '' : type;
+
+    this.setState({ typeFilter }, () => {
+      this.instantSearch(this.state.query, (err, content) => {
+        this.setState({
+          results: content,
+          facets: content.facets,
+          page: 1,
+          categoryFilter: [],
+          brandFilter: [],
+        });
+      });
     });
   }
 
@@ -103,19 +142,23 @@ class App extends React.Component {
       content = (
         <ProductList
           products={this.state.results}
-          entryClick={this.entryClick}
           pageClick={this.pageClick}
         />
       );
       filters = (
         <div className="filter-container">
+          <FilterType
+            types={this.state.facets.type}
+            typeToggle={this.typeToggle}
+            currentType={this.state.typeFilter}
+          />
           <FilterCategory
-            categories={this.state.results.facets.categories}
+            categories={this.state.facets.categories}
             categoryChange={this.categoryChange}
             currentFilters={this.state.categoryFilter}
           />
           <FilterBrand
-            brands={this.state.results.facets.brand}
+            brands={this.state.facets.brand}
             brandChange={this.brandChange}
             currentFilters={this.state.brandFilter}
           />

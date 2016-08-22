@@ -26,3 +26,18 @@ span.numHits {
   color: $bootstrap-blue;
 }
 
+ul.type-filter-list {
+  padding: 0;
+  list-style: none;
+}
+
+li.type-list-item {
+  margin: 3px 0;
+  font-size: 12px;
+}
+
+div.checkbox:hover,
+li.type-list-item:hover {
+  color: $red;
+  cursor: pointer;
+}

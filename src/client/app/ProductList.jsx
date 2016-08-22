@@ -3,7 +3,7 @@ import ProductEntry from './ProductEntry.jsx';
 import Pagination from './Pagination.jsx';
 import style from '../styles/ProductList.scss';
 
-const ProductList = ({ products, entryClick, pageClick }) => (
+const ProductList = ({ products, pageClick }) => (
   <div className="product-list-container">
     <ul id="product-list">
       <div id="stats" className="small">
@@ -11,7 +11,7 @@ const ProductList = ({ products, entryClick, pageClick }) => (
       </div>
       {
         products.hits.map((product, i) =>
-          <ProductEntry product={product} key={i} entryClick={entryClick} />)
+          <ProductEntry product={product} key={i} />)
       }
       <div className="pagination-container">
         <Pagination
@@ -26,7 +26,6 @@ const ProductList = ({ products, entryClick, pageClick }) => (
 
 ProductList.propTypes = {
   products: PropTypes.object.isRequired,
-  entryClick: PropTypes.func.isRequired,
   pageClick: PropTypes.func.isRequired,
 };
 
