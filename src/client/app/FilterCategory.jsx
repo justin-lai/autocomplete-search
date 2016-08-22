@@ -4,6 +4,7 @@ import style from '../styles/Filters.scss';
 const FilterCategory = ({ categories, categoryChange, currentFilters }) => {
   // helper function that iterates over all the category checkboxes
   // and returns an array of selected category names
+  // also clears checkboxes so they can be correctly checked again later
   function getCheckedBoxes(chkboxName) {
     const checkboxes = document.getElementsByClassName(chkboxName);
     const checkboxesChecked = [].filter.call(checkboxes, checkbox => checkbox.checked)
@@ -31,8 +32,8 @@ const FilterCategory = ({ categories, categoryChange, currentFilters }) => {
   }
 
   return (
-    <div className="category-filter-container">
-      <h4 className="category-filter-header">CATEGORY</h4>
+    <div className="filter-container">
+      <h4 className="filter-header">CATEGORY</h4>
       {
         Object.keys(newCategories)
           .sort((a, b) => newCategories[b] - newCategories[a])
