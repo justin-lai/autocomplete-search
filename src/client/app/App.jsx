@@ -16,7 +16,7 @@ class App extends React.Component {
       query: '',
       results: [],
       page: 1,
-      categoryFilter: {},
+      categoryFilter: [],
     };
     bindAll(this,
       'instantSearch',
@@ -42,17 +42,17 @@ class App extends React.Component {
   }
 
   instantSearch(query) {
-    let filterQuery = '';
+    let filterString = '';
     if (this.state.categoryFilter) {
-      filterQuery += Object.keys(this.state.categoryFilter)
-        .map(category => this.state.categoryFilter[category])
-        .join(' OR ');
+      filterString += this.state.categoryFilter
+                      .map(category => `categories:\"${category.name}\"`)
+                      .join(' OR ');
     }
 
     const options = {
       page: this.state.page - 1,
       facets: '*',
-      filters: filterQuery,
+      filters: filterString,
       // attributesToSnippet: ['name:5', 'description:15'],
     };
 
