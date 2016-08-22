@@ -7,6 +7,7 @@ import style from '../styles/App.scss';
 import index from '../config/config.js';
 import SearchBox from './SearchBox.jsx';
 import ProductList from './ProductList.jsx';
+import FilterCategory from './FilterCategory.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,11 +16,14 @@ class App extends React.Component {
       query: '',
       results: [],
       page: 1,
+      categoryFilter: {},
     };
     bindAll(this,
       'instantSearch',
       'entryClick',
-      'pageClick'
+      'pageClick',
+      'categoryChange',
+      'clearFilters'
     );
   }
 
@@ -38,9 +42,18 @@ class App extends React.Component {
   }
 
   instantSearch(query) {
+    let filterQuery = '';
+    if (this.state.categoryFilter) {
+      filterQuery += Object.keys(this.state.categoryFilter)
+        .map(category => this.state.categoryFilter[category])
+        .join(' OR ');
+    }
+
     const options = {
       page: this.state.page - 1,
-      attributesToSnippet: ['name:5', 'description:15'],
+      facets: '*',
+      filters: filterQuery,
+      // attributesToSnippet: ['name:5', 'description:15'],
     };
 
     index.search(query, options, (err, content) => {
@@ -53,9 +66,6 @@ class App extends React.Component {
     });
   }
 
-  autocompleteSearch() {
-  }
-
   entryClick(product) {
     console.log(product);
   }
@@ -66,14 +76,35 @@ class App extends React.Component {
     });
   }
 
+  categoryChange(checkedBoxes) {
+    // const categoryFilter = checkedBoxes ? checkedBoxes.join(' OR ') : '';
+    this.setState({ categoryFilter: checkedBoxes }, () => {
+      this.instantSearch(this.state.query);
+    });
+  }
+
+  clearFilters() {
+    this.setState({
+      categoryFilter: '',
+    });
+  }
+
   render() {
     let content;
+    let filters;
     if (this.state.results.nbHits > 0 && this.state.query !== '') {
       content = (
         <ProductList
           products={this.state.results}
           entryClick={this.entryClick}
           pageClick={this.pageClick}
+        />
+      );
+      filters = (
+        <FilterCategory
+          categories={this.state.results.facets.categories}
+          categoryChange={this.categoryChange}
+          currentFilters={this.state.categoryFilter}
         />
       );
     } else if (this.state.query !== '') {
@@ -86,6 +117,7 @@ class App extends React.Component {
           <div id="search-fields" className="col-xs-4 col-md-4">
             <h1 id="search-header">ALGOLIA SEARCH</h1>
             <SearchBox instantSearch={this.instantSearch} />
+            { filters }
           </div>
           <div id="search-results" className="col-xs-8 col-md-8">
             { content }

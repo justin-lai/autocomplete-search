@@ -1,0 +1,28 @@
+@import './variables.scss';
+ 
+/*
+ * Base styles
+ * ========================================================================== */
+
+.category-filter-container {
+  padding: 10px;
+}
+
+.category-filter-header {
+  border-bottom: 1px solid black;
+}
+
+.checkbox input[type=checkbox] {
+  margin: 0 10px 0 0;
+  position: relative;
+}
+
+.checkbox label {
+  padding-left: 0;
+}
+
+span.numHits {
+  float: right;
+  color: $bootstrap-blue;
+}
+
