@@ -72,3 +72,10 @@ body:after {
   max-height: 30px;
   margin: 0 auto;
 }
+
+#no-results-message {
+  margin-top: 200px;
+  text-align: center;
+  font-size: 24px;
+  color: $grey;
+}

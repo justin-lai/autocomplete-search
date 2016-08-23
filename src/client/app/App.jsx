@@ -1,4 +1,4 @@
-/* global autocomplete */
+/* global autocomplete, Hogan */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_highlightResult"] }] */
 
 import React from 'react';
@@ -26,6 +26,11 @@ class App extends React.Component {
       priceFilter: [0, 5000],
       facets: {},
     };
+
+    this.onPageClick = this.onFilterChange('page');
+    this.onCategoryChange = this.onFilterChange('categoryFilter');
+    this.onBrandChange = this.onFilterChange('brandFilter');
+
     bindAll(this,
       'instantSearch',
       'onPageClick',
@@ -37,6 +42,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.didMount = true;
+
     autocomplete('#search-input', { hint: false }, [
       {
         source: autocomplete.sources.hits(index, { hitsPerPage: 5 }),
@@ -52,34 +59,16 @@ class App extends React.Component {
     this.instantSearch('');
   }
 
-  onPageClick(page) {
-    this.setState({ page }, () => {
-      this.instantSearch(this.state.query, (err, content) => {
-        this.setState({
-          results: content,
+  onFilterChange(filterKey) {
+    return (newFilter) => {
+      this.setState({ [filterKey]: newFilter }, () => {
+        this.instantSearch(this.state.query, (err, content) => {
+          this.setState({
+            results: content,
+          });
         });
       });
-    });
-  }
-
-  onCategoryChange(checkedBoxes) {
-    this.setState({ categoryFilter: checkedBoxes }, () => {
-      this.instantSearch(this.state.query, (err, content) => {
-        this.setState({
-          results: content,
-        });
-      });
-    });
-  }
-
-  onBrandChange(checkedBoxes) {
-    this.setState({ brandFilter: checkedBoxes }, () => {
-      this.instantSearch(this.state.query, (err, content) => {
-        this.setState({
-          results: content,
-        });
-      });
-    });
+    };
   }
 
   onTypeToggle(type) {
@@ -108,8 +97,12 @@ class App extends React.Component {
     if (priceRange[0] !== priceRange[1]) {
       this.setState({ priceFilter: priceRange }, () => {
         this.instantSearch(this.state.query, (err, content) => {
+          const facets = content.facets;
+          facets.price_min = this.state.facets.price_min || 0;
+          facets.price_max = this.state.facets.price_max || 5000;
           this.setState({
             results: content,
+            facets,
           });
         });
       });
@@ -176,6 +169,16 @@ class App extends React.Component {
     }
   }
 
+  clearFilters() {
+    this.setState({
+      page: 1,
+      categoryFilter: [],
+      brandFilter: [],
+      typeFilter: '',
+      priceFilter: [0, 5000],
+    });
+  }
+
   render() {
     let content;
     let filters;
@@ -211,8 +214,13 @@ class App extends React.Component {
           />
         </div>
       );
-    } else {
-      content = <p>No results found</p>;
+    } else if (this.didMount) {
+      content = (
+        <div id="no-results-message">
+          <p>We didn't find any results for the search <em>"{this.state.query}"</em>.</p>
+        </div>
+      );
+      this.clearFilters();
     }
 
     return (

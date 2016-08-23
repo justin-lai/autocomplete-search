@@ -26,8 +26,9 @@
     border-top: none;
 
     .aa-suggestion {
+      font-size: 12px;
       cursor: pointer;
-      padding: 5px 4px;
+      padding: 10px;
       border-bottom: 1px solid $grey-light;
 
       em {
@@ -37,7 +38,7 @@
     }
 
     .aa-suggestion.aa-cursor {
-      background: $bootstrap-blue-light;
+      background: $red-light;
     }
   }
 }
