@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { bindAll, debounce } from 'lodash';
-import index from '../config/config.js';
+import { INDEX_RELEVANCE, INDEX_PRICE_ASC, INDEX_PRICE_DESC } from '../config/config.js';
 import SearchBox from './SearchBox.jsx';
 import ProductList from './ProductList.jsx';
 import FilterCategory from './FilterCategory.jsx';
@@ -11,12 +11,14 @@ import FilterBrand from './FilterBrand.jsx';
 import FilterType from './FilterType.jsx';
 import PriceSlider from './PriceSlider.jsx';
 
+
 require('../styles/App.scss');
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      index: INDEX_RELEVANCE,
       query: '',
       results: [],
       page: 1,
@@ -28,6 +30,7 @@ class App extends React.Component {
     };
 
     this.onPageClick = this.onFilterChange('page');
+    this.onSortByChange = this.onFilterChange('index');
     this.onCategoryChange = this.onFilterChange('categoryFilter');
     this.onBrandChange = this.onFilterChange('brandFilter');
 
@@ -46,7 +49,7 @@ class App extends React.Component {
 
     autocomplete('#search-input', { hint: false }, [
       {
-        source: autocomplete.sources.hits(index, { hitsPerPage: 5 }),
+        source: autocomplete.sources.hits(this.state.index, { hitsPerPage: 5 }),
         displayKey: 'name',
         templates: {
           suggestion: suggestion => suggestion._highlightResult.name.value,
@@ -146,10 +149,10 @@ class App extends React.Component {
     console.log(options.filters);
 
     if (callback) {
-      index.search(query, options, callback);
+      this.state.index.search(query, options, callback);
     } else {
       // default callback if not provided (occurs when typing through searchbox)
-      index.search(query, options, (err, content) => {
+      this.state.index.search(query, options, (err, content) => {
         console.log(content);
 
         const facets = content.facets;
@@ -187,6 +190,7 @@ class App extends React.Component {
         <ProductList
           products={this.state.results}
           onPageClick={this.onPageClick}
+          onSortByChange={this.onSortByChange}
         />
       );
       filters = (

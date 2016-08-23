@@ -1,0 +1,20 @@
+@import './variables.scss';
+ 
+/*
+ * Base styles
+ * ========================================================================== */
+
+.sortby-container {
+  margin: 35px 0 0 0;
+}
+.sortby-dropdown {
+  border: none;
+  -webkit-box-shadow: none;
+}
+
+.sortby-dropdown:focus {
+  outline: none !important;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+

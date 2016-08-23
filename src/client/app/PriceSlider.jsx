@@ -14,10 +14,44 @@ const PriceSlider = ({ min, max, currentPriceRange, onPriceChange }) => {
     style: { color: '#777' },
     label: `$${max.toFixed(2)}`,
   };
+
+  function dollarFormatter(v) {
+    return `$${v.toFixed(2)}`;
+  }
+
+  // reset current price range to be within the bounds of the min and max
   const defaults = [Math.max(currentPriceRange[0], min), Math.min(currentPriceRange[1], max)];
-
-  console.log(min, defaults[0], defaults[1], max);
-
+  let slider;
+  if (currentPriceRange[0] !== defaults[0] || currentPriceRange[1] !== defaults[1]) {
+    slider = (
+      <Slider
+        className="price-slider"
+        range
+        defaultValue={defaults}
+        min={min}
+        max={max}
+        marks={marks}
+        onChange={onPriceChange}
+        pushable={1}
+        tipFormatter={dollarFormatter}
+        value={defaults}
+      />
+    );
+  } else {
+    slider = (
+      <Slider
+        className="price-slider"
+        range
+        defaultValue={defaults}
+        min={min}
+        max={max}
+        marks={marks}
+        onChange={onPriceChange}
+        pushable={1}
+        tipFormatter={dollarFormatter}
+      />
+    );
+  }
 
   return (
     <div className="filter-container">
@@ -28,16 +62,7 @@ const PriceSlider = ({ min, max, currentPriceRange, onPriceChange }) => {
         </small>
       </h4>
       <div>
-        <Slider
-          className="price-slider"
-          range
-          defaultValue={defaults}
-          min={min}
-          max={max}
-          marks={marks}
-          onChange={onPriceChange}
-          pushable={1}
-        />
+        { slider }
       </div>
     </div>
   );
