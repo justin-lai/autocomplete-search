@@ -4,7 +4,13 @@ require('../styles/Pagination.scss');
 
 const Pagination = ({ numberOfPages, activePage, onPageClick }) => {
   const pageButtons = [];
-  const startPage = activePage - 3 < 1 ? 1 : activePage - 3;
+  let startPage;
+  if (activePage + 3 > numberOfPages) {
+    startPage = numberOfPages > 6 ? numberOfPages - 6 : 1;
+  } else {
+    startPage = activePage - 3 > 0 ? activePage - 3 : 1;
+  }
+  // const startPage = activePage - 3 < 1 ? 1 : activePage - 3;
   const endPage = startPage + 6 > numberOfPages ? numberOfPages : startPage + 6;
   let [first, previous, next, last] = [null, null, null, null];
 
