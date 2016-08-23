@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { bindAll, debounce } from 'lodash';
-import { INDEX_RELEVANCE, INDEX_PRICE_ASC, INDEX_PRICE_DESC } from '../config/config.js';
+import { INDEX_RELEVANCE } from '../config/config.js';
 import SearchBox from './SearchBox.jsx';
 import ProductList from './ProductList.jsx';
 import FilterCategory from './FilterCategory.jsx';
@@ -40,7 +40,8 @@ class App extends React.Component {
       'onCategoryChange',
       'onBrandChange',
       'onTypeToggle',
-      'onPriceChange'
+      'onPriceChange',
+      'clearFilters'
     );
   }
 
@@ -55,7 +56,7 @@ class App extends React.Component {
           suggestion: suggestion => suggestion._highlightResult.name.value,
         },
       },
-    ]).on('autocomplete:selected', (event, suggestion, dataset) => {
+    ]).on('autocomplete:selected', (event, suggestion) => {
       this.instantSearch(suggestion.name, null, true);
     });
 
@@ -69,6 +70,7 @@ class App extends React.Component {
           this.setState({
             results: content,
           });
+          if (content.nbHits === 0) this.clearFilters();
         });
       });
     };
@@ -92,6 +94,7 @@ class App extends React.Component {
           results: content,
           facets,
         });
+        if (content.nbHits === 0) this.clearFilters();
       });
     });
   }
@@ -107,6 +110,7 @@ class App extends React.Component {
             results: content,
             facets,
           });
+          if (content.nbHits === 0) this.clearFilters();
         });
       });
     }
@@ -145,8 +149,6 @@ class App extends React.Component {
     };
 
     if (!unfilteredSearch) options.filters = this.buildQueryString();
-
-    console.log(options.filters);
 
     if (callback) {
       this.state.index.search(query, options, callback);
@@ -224,7 +226,6 @@ class App extends React.Component {
           <p>We didn't find any results for the search <em>"{this.state.query}"</em>.</p>
         </div>
       );
-      this.clearFilters();
     }
 
     return (
