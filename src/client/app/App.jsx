@@ -2,14 +2,16 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_highlightResult"] }] */
 
 import React from 'react';
-import bindAll from 'lodash.bindall';
-import style from '../styles/App.scss';
+import { bindAll, debounce } from 'lodash';
 import index from '../config/config.js';
 import SearchBox from './SearchBox.jsx';
 import ProductList from './ProductList.jsx';
 import FilterCategory from './FilterCategory.jsx';
 import FilterBrand from './FilterBrand.jsx';
 import FilterType from './FilterType.jsx';
+import PriceSlider from './PriceSlider.jsx';
+
+require('../styles/App.scss');
 
 class App extends React.Component {
   constructor(props) {
@@ -21,14 +23,16 @@ class App extends React.Component {
       categoryFilter: [],
       brandFilter: [],
       typeFilter: '',
-      facets: [],
+      priceFilter: [0, 5000],
+      facets: {},
     };
     bindAll(this,
       'instantSearch',
-      'pageClick',
-      'categoryChange',
-      'brandChange',
-      'typeToggle'
+      'onPageClick',
+      'onCategoryChange',
+      'onBrandChange',
+      'onTypeToggle',
+      'onPriceChange'
     );
   }
 
@@ -42,64 +46,23 @@ class App extends React.Component {
         },
       },
     ]).on('autocomplete:selected', (event, suggestion, dataset) => {
-      console.log(suggestion, dataset);
+      this.instantSearch(suggestion.name, null, true);
     });
+
+    this.instantSearch('');
   }
 
-  instantSearch(query, callback) {
-    const filters = [];
-    if (this.state.categoryFilter.length > 0) {
-      filters.push(this.state.categoryFilter
-                    .map(category => `categories:\"${category.name}\"`)
-                    .join(' OR '));
-    }
-    if (this.state.brandFilter.length > 0) {
-      filters.push(this.state.brandFilter
-                    .map(brand => `brand:\"${brand.name}\"`)
-                    .join(' OR '));
-    }
-    if (this.state.typeFilter) {
-      filters.push(`type:\"${this.state.typeFilter}\"`);
-    }
-    const filterString = filters.length > 0 ? filters.join(' AND ') : '';
-
-    const options = {
-      page: this.state.page - 1,
-      facets: '*',
-      filters: filterString,
-    };
-
-    if (callback) {
-      index.search(query, options, callback);
-    } else {
-      // default callback if not provided (occurs when typing through searchbox)
-      index.search(query, options, (err, content) => {
-        console.log(content);
-        this.setState({
-          query,
-          results: content,
-          page: 1,
-          facets: content.facets,
-          categoryFilter: [],
-          brandFilter: [],
-          typeFilter: '',
-        });
-      });
-    }
-  }
-
-  pageClick(page) {
+  onPageClick(page) {
     this.setState({ page }, () => {
       this.instantSearch(this.state.query, (err, content) => {
         this.setState({
           results: content,
-          page: 1, // reset page for next search
         });
       });
     });
   }
 
-  categoryChange(checkedBoxes) {
+  onCategoryChange(checkedBoxes) {
     this.setState({ categoryFilter: checkedBoxes }, () => {
       this.instantSearch(this.state.query, (err, content) => {
         this.setState({
@@ -109,7 +72,7 @@ class App extends React.Component {
     });
   }
 
-  brandChange(checkedBoxes) {
+  onBrandChange(checkedBoxes) {
     this.setState({ brandFilter: checkedBoxes }, () => {
       this.instantSearch(this.state.query, (err, content) => {
         this.setState({
@@ -119,52 +82,136 @@ class App extends React.Component {
     });
   }
 
-  typeToggle(type) {
+  onTypeToggle(type) {
     const typeFilter = this.state.typeFilter ? '' : type;
 
-    this.setState({ typeFilter }, () => {
+    this.setState({
+      typeFilter,
+      page: 1,
+      categoryFilter: [],
+      brandFilter: [],
+      priceFilter: [0, 5000],
+    }, () => {
       this.instantSearch(this.state.query, (err, content) => {
+        const facets = content.facets;
+        facets.price_min = content.facets_stats ? content.facets_stats.price.min : 0;
+        facets.price_max = content.facets_stats ? content.facets_stats.price.max : 5000;
         this.setState({
           results: content,
-          facets: content.facets,
-          page: 1,
-          categoryFilter: [],
-          brandFilter: [],
+          facets,
         });
       });
     });
   }
 
+  onPriceChange(priceRange) {
+    if (priceRange[0] !== priceRange[1]) {
+      this.setState({ priceFilter: priceRange }, () => {
+        this.instantSearch(this.state.query, (err, content) => {
+          this.setState({
+            results: content,
+          });
+        });
+      });
+    }
+  }
+
+  buildQueryString() {
+    const filtersOR = [];
+    const filtersAND = [];
+    if (this.state.categoryFilter.length > 0) {
+      filtersOR.push(this.state.categoryFilter
+                    .map(category => `categories:\"${category.name}\"`)
+                    .join(' OR '));
+    }
+    if (this.state.brandFilter.length > 0) {
+      filtersOR.push(this.state.brandFilter
+                    .map(brand => `brand:\"${brand.name}\"`)
+                    .join(' OR '));
+    }
+    if (filtersOR.length > 0) filtersAND.push(filtersOR.join(' OR '));
+
+    if (this.state.typeFilter) {
+      filtersAND.push(`type:\"${this.state.typeFilter}\"`);
+    }
+    if (this.state.priceFilter) {
+      filtersAND.push(
+        `price>=${this.state.priceFilter[0]} AND price<=${this.state.priceFilter[1]}`
+      );
+    }
+    return filtersAND.length > 0 ? filtersAND.join(' AND ') : '';
+  }
+
+  instantSearch(query, callback, unfilteredSearch) {
+    const options = {
+      page: this.state.page - 1,
+      facets: '*',
+    };
+
+    if (!unfilteredSearch) options.filters = this.buildQueryString();
+
+    console.log(options.filters);
+
+    if (callback) {
+      index.search(query, options, callback);
+    } else {
+      // default callback if not provided (occurs when typing through searchbox)
+      index.search(query, options, (err, content) => {
+        console.log(content);
+
+        const facets = content.facets;
+        facets.price_min = content.facets_stats ? content.facets_stats.price.min : 0;
+        facets.price_max = content.facets_stats ? content.facets_stats.price.max : 5000;
+        this.setState({
+          query,
+          facets,
+          results: content,
+          page: 1,
+          categoryFilter: [],
+          brandFilter: [],
+          typeFilter: '',
+          priceFilter: [0, 5000],
+        });
+      });
+    }
+  }
+
   render() {
     let content;
     let filters;
-    if (this.state.results.nbHits > 0 && this.state.query !== '') {
+    if (this.state.results.nbHits > 0) {
       content = (
         <ProductList
           products={this.state.results}
-          pageClick={this.pageClick}
+          onPageClick={this.onPageClick}
         />
       );
       filters = (
         <div className="filter-container">
-          <FilterType
-            types={this.state.facets.type}
-            typeToggle={this.typeToggle}
-            currentType={this.state.typeFilter}
-          />
           <FilterCategory
             categories={this.state.facets.categories}
-            categoryChange={this.categoryChange}
-            currentFilters={this.state.categoryFilter}
+            currentCategories={this.state.categoryFilter}
+            onCategoryChange={this.onCategoryChange}
           />
           <FilterBrand
             brands={this.state.facets.brand}
-            brandChange={this.brandChange}
-            currentFilters={this.state.brandFilter}
+            currentBrand={this.state.brandFilter}
+            onBrandChange={this.onBrandChange}
+          />
+          <PriceSlider
+            min={Math.floor(this.state.facets.price_min) || 0}
+            max={Math.ceil(this.state.facets.price_max) || 5000}
+            currentPriceRange={this.state.priceFilter}
+            onPriceChange={debounce((priceRange) => { this.onPriceChange(priceRange); }, 100)}
+          />
+          <FilterType
+            types={this.state.facets.type}
+            currentType={this.state.typeFilter}
+            onTypeToggle={this.onTypeToggle}
           />
         </div>
       );
-    } else if (this.state.query !== '') {
+    } else {
       content = <p>No results found</p>;
     }
 
@@ -172,7 +219,7 @@ class App extends React.Component {
       <section className="container">
         <div className="row">
           <div id="search-fields" className="col-xs-4 col-md-4">
-            <h1 id="search-header">ALGOLIA SEARCH</h1>
+            <h1 id="search-header">a search demo<small>powered by </small></h1>
             <SearchBox instantSearch={this.instantSearch} />
             { filters }
           </div>

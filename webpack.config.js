@@ -30,12 +30,20 @@ const config = {
       },
       {
         test: /\.scss$/,
-        include: APP_DIR,
         loaders: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
       },
       {
         test: /\.jpg$/,
         loader: 'file-loader',
+      },
+      {
+        test: /\.png$/,
+        loader: 'url-loader',
+        query: { mimetype: 'image/png' },
       },
     ],
   },

@@ -13,6 +13,21 @@ h1 {
   line-height: 1.375; /* ~22px */
 }
 
+#search-header small {
+  display: block;
+  text-align: right;
+
+  &:after {
+    background: url('../assets/algolia-logo.png') no-repeat;
+    background-size: 90px 30px;
+    display: inline-block;
+    width: 90px; 
+    height: 30px;
+    content:"";
+    vertical-align: middle;
+  }
+}
+
 /*
  * Layout
  * ========================================================================== */
@@ -25,12 +40,12 @@ h1 {
 
 #search-fields {
   border-right: 1px solid $grey-light;
-  height: 100%;
+  height: 1200px;
   background-color: rgba(173, 216, 230, 0.8);
 }
 
 #search-results {
-  height: 100%;
+  height: 1200px;
   background-color: white;
 }
 
@@ -47,8 +62,13 @@ body:after {
   background-image: url('../assets/background.jpg'); 
   background-size: cover;
   width: 100%;
-  height: 100%;
+  height: 1200px;
   opacity: .8;
   z-index: -1;
 }
 
+.background-logo {
+  display: inline;
+  max-height: 30px;
+  margin: 0 auto;
+}

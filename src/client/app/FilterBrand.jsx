@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
-import style from '../styles/Filters.scss';
 
-const FilterBrand = ({ brands, brandChange, currentFilters }) => {
+require('../styles/Filters.scss');
+
+const FilterBrand = ({ brands, onBrandChange, currentBrand }) => {
   // helper function that iterates over all the brand checkboxes
   // and returns an array of selected brand names
   // also clears checkboxes so they can be correctly checked again later
@@ -18,8 +19,8 @@ const FilterBrand = ({ brands, brandChange, currentFilters }) => {
   // add current filters to updated brand view
   // add additional brands from recent search up to a total max of 10
   const newBrands = {};
-  const filterNames = currentFilters.map(filter => filter.name);
-  currentFilters.forEach(filter => {
+  const filterNames = currentBrand.map(filter => filter.name);
+  currentBrand.forEach(filter => {
     newBrands[filter.name] = filter.hits;
   });
 
@@ -38,21 +39,22 @@ const FilterBrand = ({ brands, brandChange, currentFilters }) => {
         Object.keys(newBrands)
           .sort((a, b) => newBrands[b] - newBrands[a])
           .map((brand, i) => (
-            <div className="checkbox small" key={i}>
-              <label htmlFor={brand}>
+            <div className="checkbox-row row small" key={i}>
+              <label htmlFor={brand} className="col-xs-14 col-md-10">
                 <input
                   type="checkbox"
                   className="brand-checkbox"
                   value={brands[brand]}
                   name={brand}
+                  id={brand}
                   checked={filterNames.indexOf(brand) !== -1}
                   onChange={() => {
-                    brandChange(getCheckedBoxes('brand-checkbox'));
+                    onBrandChange(getCheckedBoxes('brand-checkbox'));
                   }}
                 />
                 { brand }
               </label>
-              <span className="numHits">{brands[brand]}</span>
+              <span className="numHits col-xs-4 col-md-2">{brands[brand]}</span>
             </div>
           ))
       }
@@ -62,8 +64,8 @@ const FilterBrand = ({ brands, brandChange, currentFilters }) => {
 
 FilterBrand.propTypes = {
   brands: PropTypes.object.isRequired,
-  brandChange: PropTypes.func.isRequired,
-  currentFilters: PropTypes.array.isRequired,
+  onBrandChange: PropTypes.func.isRequired,
+  currentBrand: PropTypes.array.isRequired,
 };
 
 export default FilterBrand;

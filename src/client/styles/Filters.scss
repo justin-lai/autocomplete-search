@@ -5,24 +5,34 @@
  * ========================================================================== */
 
 .filter-container {
-  padding: 10px;
+  padding: 10px 10px 0 10px;
 }
 
 .filter-header {
   border-bottom: 1px solid black;
 }
 
-.checkbox input[type=checkbox] {
-  margin: 0 10px 0 0;
-  position: relative;
+.filter-subheader {
+  margin-top: 5px;
+  float: right;
+  font-size: 12px;
 }
 
-.checkbox label {
-  padding-left: 0;
+.checkbox-row {
+  margin-bottom: 0;
+
+  input[type=checkbox] {
+    margin: 0 10px 0 0;
+    position: relative;
+  }
+
+  label {
+    font-weight: 400;
+  }
 }
 
 span.numHits {
-  float: right;
+  text-align: right;
   color: $bootstrap-blue;
 }
 
@@ -36,8 +46,17 @@ li.type-list-item {
   font-size: 12px;
 }
 
-div.checkbox:hover,
+div.checkbox-row label:hover,
 li.type-list-item:hover {
   color: $red;
   cursor: pointer;
+}
+
+li.strikeout:hover {
+  text-decoration: line-through;
+}
+
+.price-slider {
+  width: 90% !important;
+  margin: 20px auto;
 }

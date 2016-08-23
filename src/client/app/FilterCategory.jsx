@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
-import style from '../styles/Filters.scss';
 
-const FilterCategory = ({ categories, categoryChange, currentFilters }) => {
+require('../styles/Filters.scss');
+
+const FilterCategory = ({ categories, onCategoryChange, currentCategories }) => {
   // helper function that iterates over all the category checkboxes
   // and returns an array of selected category names
   // also clears checkboxes so they can be correctly checked again later
@@ -18,8 +19,8 @@ const FilterCategory = ({ categories, categoryChange, currentFilters }) => {
   // add current filters to updated category view
   // add additional categories from recent search up to a total max of 10
   const newCategories = {};
-  const filterNames = currentFilters.map(filter => filter.name);
-  currentFilters.forEach(filter => {
+  const filterNames = currentCategories.map(filter => filter.name);
+  currentCategories.forEach(filter => {
     newCategories[filter.name] = filter.hits;
   });
 
@@ -38,21 +39,22 @@ const FilterCategory = ({ categories, categoryChange, currentFilters }) => {
         Object.keys(newCategories)
           .sort((a, b) => newCategories[b] - newCategories[a])
           .map((category, i) => (
-            <div className="checkbox small" key={i}>
-              <label htmlFor={category}>
+            <div className="checkbox-row row small" key={i}>
+              <label htmlFor={category} className="col-xs-14 col-md-10">
                 <input
                   type="checkbox"
                   className="category-checkbox"
                   value={categories[category]}
                   name={category}
+                  id={category}
                   checked={filterNames.indexOf(category) !== -1}
                   onChange={() => {
-                    categoryChange(getCheckedBoxes('category-checkbox'));
+                    onCategoryChange(getCheckedBoxes('category-checkbox'));
                   }}
                 />
                 { category }
               </label>
-              <span className="numHits">{categories[category]}</span>
+              <span className="numHits col-xs-4 col-md-2">{categories[category]}</span>
             </div>
           ))
       }
@@ -62,8 +64,8 @@ const FilterCategory = ({ categories, categoryChange, currentFilters }) => {
 
 FilterCategory.propTypes = {
   categories: PropTypes.object.isRequired,
-  categoryChange: PropTypes.func.isRequired,
-  currentFilters: PropTypes.array.isRequired,
+  onCategoryChange: PropTypes.func.isRequired,
+  currentCategories: PropTypes.array.isRequired,
 };
 
 export default FilterCategory;
