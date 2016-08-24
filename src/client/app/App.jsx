@@ -57,6 +57,7 @@ class App extends React.Component {
         },
       },
     ]).on('autocomplete:selected', (event, suggestion) => {
+      // remove this and manually change state!!!!!
       this.instantSearch(suggestion.name, null, true);
     });
 
