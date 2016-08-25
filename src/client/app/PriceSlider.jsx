@@ -5,6 +5,7 @@ require('../styles/rc-slider-default.css');
 require('../styles/Filters.scss');
 
 const PriceSlider = ({ min, max, currentPriceRange, onPriceChange }) => {
+  // create min and max markers
   const marks = {};
   marks[min] = {
     style: { color: '#777' },

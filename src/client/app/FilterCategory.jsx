@@ -24,13 +24,11 @@ const FilterCategory = ({ categories, onCategoryChange, currentCategories }) => 
     newCategories[filter.name] = filter.hits;
   });
 
-  for (const name in categories) {
+  Object.keys(categories).forEach(name => {
     if (Object.keys(newCategories).length <= 10) {
       newCategories[name] = categories[name];
-    } else {
-      break;
     }
-  }
+  });
 
   return (
     <div className="filter-container">
