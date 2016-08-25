@@ -3,9 +3,11 @@ import React, { PropTypes } from 'react';
 require('../styles/Filters.scss');
 
 const FilterBrand = ({ brands, onBrandChange, currentBrand }) => {
-  // helper function that iterates over all the brand checkboxes
-  // and returns an array of selected brand names
-  // also clears checkboxes so they can be correctly checked again later
+  /*
+    helper function that iterates over all the brand checkboxes
+    and returns an array of selected brand names
+    also clears checkboxes so they can be correctly checked again later
+  */
   function getCheckedBoxes(chkboxName) {
     const checkboxes = document.getElementsByClassName(chkboxName);
     const checkboxesChecked = [].filter.call(checkboxes, checkbox => checkbox.checked)
@@ -24,13 +26,11 @@ const FilterBrand = ({ brands, onBrandChange, currentBrand }) => {
     newBrands[filter.name] = filter.hits;
   });
 
-  for (const name in brands) {
+  Object.keys(brands).forEach(name => {
     if (Object.keys(newBrands).length <= 10) {
       newBrands[name] = brands[name];
-    } else {
-      break;
     }
-  }
+  });
 
   return (
     <div className="filter-container">

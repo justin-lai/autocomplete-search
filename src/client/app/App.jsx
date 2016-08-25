@@ -48,6 +48,7 @@ class App extends React.Component {
   componentDidMount() {
     this.didMount = true;
 
+    // load autocomplete event listener on mount
     autocomplete('#search-input', { hint: false }, [
       {
         source: autocomplete.sources.hits(this.state.index, { hitsPerPage: 5 }),
@@ -60,10 +61,12 @@ class App extends React.Component {
       this.instantSearch(suggestion.name, null, true);
     });
 
+    // perform initial search (no query/filters)
     this.instantSearch('');
   }
 
   onFilterChange(filterKey) {
+    // curry helper constructor used for changes to page, sortBy, category, and brand filters
     return (newFilter) => {
       this.setState({ [filterKey]: newFilter }, () => {
         this.instantSearch(this.state.query, (err, content) => {
@@ -77,6 +80,7 @@ class App extends React.Component {
   }
 
   onTypeToggle(type) {
+    // toggles the type filter if one exists
     const typeFilter = this.state.typeFilter ? '' : type;
 
     this.setState({
@@ -117,6 +121,7 @@ class App extends React.Component {
   }
 
   buildQueryString() {
+    // combines filter queries: searches by CATEGORY OR BRAND AND PRICE RANGE AND TYPE
     const filtersOR = [];
     const filtersAND = [];
     if (this.state.categoryFilter.length > 0) {
@@ -143,6 +148,8 @@ class App extends React.Component {
   }
 
   instantSearch(query, callback, unfilteredSearch) {
+    // main search function given a specific query
+    // applies appropriate filters and invokes a callback after search completes
     const options = {
       page: this.state.page - 1,
       facets: '*',
