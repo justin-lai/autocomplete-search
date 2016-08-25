@@ -5,7 +5,7 @@
 ### Summary
 A JavaScript demo search interface for e-commerce powered by Algolia Instant Search and Autocomplete.
 
-Try it now on my github projects page: [https://justin-lai.github.io/autocomplete-search/] (https://justin-lai.github.io/autcomplete-search/)
+Try it now on my github projects page: [https://justin-lai.github.io/autocomplete-search/] (https://justin-lai.github.io/autocomplete-search/)
 
 ### Technologies
 - **React** - UI library for modularized presentational views and components
