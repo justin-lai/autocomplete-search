@@ -1,8 +1,29 @@
 @import '../../../node_modules/normalize.css/normalize.css';
 @import './variables.scss';
- 
+
 /*
- * Base styles
+ * Layout
+ * ========================================================================== */
+
+.container {
+  margin: 0 auto;
+  padding: 0;
+  max-width: $max-content-width;
+}
+
+#search-fields {
+  border-right: 1px solid $grey-light;
+  height: $max-content-height;
+  background-color: rgba(173, 216, 230, 0.8);
+}
+
+#search-results {
+  height: $max-content-height;
+  background-color: white;
+}
+
+/*
+ * Header
  * ========================================================================== */
  
 h1 {
@@ -29,27 +50,6 @@ h1 {
 }
 
 /*
- * Layout
- * ========================================================================== */
-
-.container {
-  margin: 0 auto;
-  padding: 0;
-  max-width: $max-content-width;
-}
-
-#search-fields {
-  border-right: 1px solid $grey-light;
-  height: $max-content-height;
-  background-color: rgba(173, 216, 230, 0.8);
-}
-
-#search-results {
-  height: $max-content-height;
-  background-color: white;
-}
-
-/*
  * Background
  * ========================================================================== */
 
@@ -72,6 +72,10 @@ body:after {
   max-height: 30px;
   margin: 0 auto;
 }
+
+/*
+ * Other
+ * ========================================================================== */
 
 #no-results-message {
   margin-top: 200px;
