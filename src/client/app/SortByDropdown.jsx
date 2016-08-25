@@ -17,7 +17,8 @@ const SortByDropdown = ({ onSortByChange }) => {
 
   return (
     <div className="sortby-container form-group">
-      <select className="sortby-dropdown form-control" onChange={handleChange}>
+      <label htmlFor="sortby">Sort by: </label>
+      <select className="sortby-dropdown form-control" name="sortby" onChange={handleChange}>
         <option value="relevance">Relevance</option>
         <option value="price(asc)">Lowest Price</option>
         <option value="price(desc)">Highest Price</option>

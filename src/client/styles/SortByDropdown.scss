@@ -1,11 +1,21 @@
-@import './variables.scss';
- 
 /*
  * Base styles
  * ========================================================================== */
 
 .sortby-container {
   margin: 35px 0 0 0;
+
+  label {
+    display: inline-block;
+    width: 30%;
+    margin: 10px 0;
+  }
+
+  select {
+    display: inline-block;
+    width: 65%;
+    margin-top: -2px;
+  }
 }
 .sortby-dropdown {
   border: none;

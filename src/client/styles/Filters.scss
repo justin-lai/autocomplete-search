@@ -18,6 +18,15 @@
   font-size: 12px;
 }
 
+span.numHits {
+  text-align: right;
+  color: $bootstrap-blue;
+}
+
+/*
+ * Checkbox Filters (Categories & Brand)
+ * ========================================================================== */
+
 .checkbox-row {
   margin-bottom: 0;
 
@@ -31,10 +40,15 @@
   }
 }
 
-span.numHits {
-  text-align: right;
-  color: $bootstrap-blue;
+div.checkbox-row label:hover,
+li.type-list-item:hover {
+  color: $red;
+  cursor: pointer;
 }
+
+/*
+ * List Filters (Type)
+ * ========================================================================== */
 
 ul.type-filter-list {
   padding: 0;
@@ -46,15 +60,13 @@ li.type-list-item {
   font-size: 12px;
 }
 
-div.checkbox-row label:hover,
-li.type-list-item:hover {
-  color: $red;
-  cursor: pointer;
-}
-
 li.strikeout:hover {
   text-decoration: line-through;
 }
+
+/*
+ * Slider (Price)
+ * ========================================================================== */
 
 .price-slider {
   width: 90% !important;

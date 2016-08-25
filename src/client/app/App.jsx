@@ -155,8 +155,6 @@ class App extends React.Component {
     } else {
       // default callback if not provided (occurs when typing through searchbox)
       this.state.index.search(query, options, (err, content) => {
-        console.log(content);
-
         const facets = content.facets;
         facets.price_min = content.facets_stats ? content.facets_stats.price.min : 0;
         facets.price_max = content.facets_stats ? content.facets_stats.price.max : 5000;
